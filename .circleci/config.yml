@@ -1,13 +1,14 @@
 version: 2.1
+
 orbs:
   slack:circleci/slack@4.9.3
 commands:
   notify_on_failure:
-    steps
+    steps:
       - slack/notify:
-        event: dail
-        channel: cicd-pipeline
-        template: basic_fail_1
+          event: fail
+          channel: cicd-pipeline
+          template: basic_fail_1
 #   destroy-environment:
 #     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
 #     parameters:
@@ -302,7 +303,15 @@ jobs:
 #             then
 #               # your code here
 #             fi
-            
+  notify_on_success:
+    docker:
+      - image: cimg/base
+    steps:
+      -slack/notify:
+        event: pass
+        channel: cicd-pipeline
+        template: success_tagged_deployment_1
+
 workflows:
   default:
     jobs:
@@ -316,6 +325,12 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
+      - notify_on_success:
+          requires:
+            - test-frontend
+            - test-backend
+            - scan-frontend
+            - scan-backend
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:

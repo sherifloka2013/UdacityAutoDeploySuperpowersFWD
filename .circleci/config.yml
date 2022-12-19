@@ -242,17 +242,18 @@ jobs:
     steps:
       - checkout
       - install_awscli
-      - attach_workspace:
-          at: ~/
+      # - attach_workspace:
+      #     at: ~/
       - run:
           name: Run migrations
           command: |
             cd backend
             npm install
-            npm run migrations > migration_output.txt
+            npm run migrations > migrations_dump.txt
 #            cat migration_output.txt
       - run:
-          name: Send migrations status to kvdb.io #Store migration result in a file.
+          name: Send migration status to kvdb.io 
+          #Store migration result in a file.
           command: |
 #            cd backend
             # if grep -q "has been executed successfully." migration_output.txt
@@ -263,7 +264,7 @@ jobs:
             #     echo "failed"
             if grep -q "has been executed successfully." ~/Project Manual/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/${KVDB_BUCKET}/migrations_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/${KVDB_BUCKET}/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       - destroy-environment
       - revert-migrations

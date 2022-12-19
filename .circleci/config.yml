@@ -52,9 +52,9 @@ commands:
             name: Destroy environments
             when: on_fail
             command: |
-              aws cloudformation delete-stack --stack-name udacity-backend-<< parameters.Workflow_ID >>
-              aws s3 rm s3://udacity-<<parameters.Workflow_ID>> --recursive
-              aws cloudformation delete-stack --stack-name udacity-frontend-<< parameters.Workflow_ID >>
+              aws cloudformation delete-stack --stack-name sherifhassan-backend-<< parameters.Workflow_ID >>
+              aws s3 rm s3://sherifhassan-<<parameters.Workflow_ID>> --recursive
+              aws cloudformation delete-stack --stack-name sherifhassan-frontend-<< parameters.Workflow_ID >>
 
     # revert-migrations:
     #   description: Revert the last migration if successfully run in the current workflow.
@@ -184,8 +184,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udacity-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=sherifhassan \
+              --stack-name "sherifhassan-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
               
       - run:
@@ -193,8 +193,8 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udacity-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=sherifhassan \
+              --stack-name "sherifhassan-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
               
       - run:

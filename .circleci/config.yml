@@ -56,22 +56,22 @@ commands:
               aws s3 rm s3://sherifhassan-<<parameters.Workflow_ID>> --recursive
               aws cloudformation delete-stack --stack-name sherifhassan-frontend-<< parameters.Workflow_ID >>
 
-    # revert-migrations:
-    #   description: Revert the last migration if successfully run in the current workflow.
-    #   parameters:
-    #     Workflow_ID:
-    #       type: string 
-    #       default: ${CIRCLE_WORKFLOW_ID:0:7}
-    #   steps:
-    #     - run:
-    #         name: Revert migrations
-    #         when: on_fail
-    #         command: |
-    #           cd ~/project/backend
-    #           if [[ -f "~/project/.circleci/outputs/db_migration_success" ]]; then
-    #             npm i
-    #             npm run migration:revert
-    #           fi
+    revert-migrations:
+      description: Revert the last migration if successfully run in the current workflow.
+      parameters:
+        Workflow_ID:
+          type: string 
+          default: ${CIRCLE_WORKFLOW_ID:0:7}
+      steps:
+        - run:
+            name: Revert migrations
+            when: on_fail
+            command: |
+              cd ~/project/backend
+              if [[ -f "~/project/.circleci/outputs/db_migration_success" ]]; then
+                npm i
+                npm run migration:revert
+              fi
             
 jobs:
   build-frontend:
@@ -236,31 +236,31 @@ jobs:
 
 
 
-  # run-migrations:
-  #   docker:
-  #     - image: circleci/node:13.8.0
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: ~/
-  #     - run:
-  #         name: Run DB migrations
-  #         command: |
-  #           cd backend
-  #           npm install
-  #           npm run migrations > migration_output.txt
-  #           cat migration_output.txt
-  #     - run:
-  #         name: Store migration result in a file.
-  #         command: |
-  #           cd backend
-  #           if grep -q "has been executed successfully." migration_output.txt
-  #           then
-  #             echo "success"
-  #             touch ~/project/.circleci/outputs/db_migration_success
-  #           else
-  #               echo "failed"
-  #           fi
+  run-migrations:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - run:
+          name: Run DB migrations
+          command: |
+            cd backend
+            npm install
+            npm run migrations > migration_output.txt
+            cat migration_output.txt
+      - run:
+          name: Store migration result in a file.
+          command: |
+            cd backend
+            if grep -q "has been executed successfully." migration_output.txt
+            then
+              echo "success"
+              touch ~/project/.circleci/outputs/db_migration_success
+            else
+                echo "failed"
+            fi
 
   # deploy-frontend:
   #   docker:
@@ -460,8 +460,8 @@ workflows:
               only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations]
       # - deploy-backend:

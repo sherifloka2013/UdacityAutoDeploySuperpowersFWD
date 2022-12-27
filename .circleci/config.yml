@@ -52,9 +52,9 @@ commands:
             name: Destroy environments
             when: on_fail
             command: |
-              aws cloudformation delete-stack --stack-name sherifhassan-backend-<< parameters.Workflow_ID >>
-              aws s3 rm s3://sherifhassan-<<parameters.Workflow_ID>> --recursive
-              aws cloudformation delete-stack --stack-name sherifhassan-frontend-<< parameters.Workflow_ID >>
+              aws cloudformation delete-stack --stack-name sherifhassan-backend-${CIRCLE_WORKFLOW_ID:0:7}
+              aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+              aws cloudformation delete-stack --stack-name sherifhassan-frontend-${CIRCLE_WORKFLOW_ID:0:7}
 
     revert-migrations:
       description: Revert the last migration if successfully run in the current workflow.
@@ -472,8 +472,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:

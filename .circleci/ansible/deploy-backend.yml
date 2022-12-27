@@ -1,5 +1,5 @@
 ---
-- name: Deploy backend i hope it work
+- name: Backend deployment
   hosts: web
   remote_user: ubuntu
   become: true

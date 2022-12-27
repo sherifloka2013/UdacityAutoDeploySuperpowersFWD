@@ -53,7 +53,7 @@ commands:
             when: on_fail
             command: |
               aws cloudformation delete-stack --stack-name sherifhassan-backend-<< parameters.Workflow_ID >>
-              aws s3 rm s3://sherifhassan-<<parameters.Workflow_ID>> --recursive
+              aws s3 rm s3://udapeople-<<parameters.Workflow_ID>> --recursive
               aws cloudformation delete-stack --stack-name sherifhassan-frontend-<< parameters.Workflow_ID >>
 
     revert-migrations:

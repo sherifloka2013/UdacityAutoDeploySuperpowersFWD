@@ -381,34 +381,34 @@ jobs:
       - revert-migrations                
       # Here's where you will add some code to rollback on failure  
 
-cloudfront-update:
-  docker:
-    - image: cimg/base:stable
-  steps:
-    - checkout
-    - install_awscli
-    - install_nodejs
-    - run:
-        name: Add the old workflow
-        command: |
-          export OldWorkflowID=$(aws cloudformation \
-                    list-exports --query "Exports[?Name==\`UdapeopleWorkflowID\`].Value" \
-                    --no-paginate --output text)
-          echo "${OldWorkflowID}" >> .circleci/files/WFO.txt
-          curl https://kvdb.io/${KVDB_BUCKET}/OldWorkflowID -d "${OldWorkflowID}"
-    - run:
-        name: Update cloudfront Distribution
-        command: |
-          aws cloudformation deploy \
-            --template-file .circleci/files/cloudfront.yml \
-            --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
-            --stack-name initialstack
-    - persist_to_workspace:
-        root: ~/
-        paths:
-          - project/.circleci/files/WFO.txt
-    # - destroy-environment
-    # - revert-migrations
+  cloudfront-update:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - checkout
+      - install_awscli
+      - install_nodejs
+      - run:
+          name: Add the old workflow
+          command: |
+            export OldWorkflowID=$(aws cloudformation \
+                      list-exports --query "Exports[?Name==\`UdapeopleWorkflowID\`].Value" \
+                      --no-paginate --output text)
+            echo "${OldWorkflowID}" >> .circleci/files/WFO.txt
+            curl https://kvdb.io/${KVDB_BUCKET}/OldWorkflowID -d "${OldWorkflowID}"
+      - run:
+          name: Update cloudfront Distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" \
+              --stack-name initialstack
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/files/WFO.txt
+      # - destroy-environment
+      # - revert-migrations
 
   cleanup:
     docker:

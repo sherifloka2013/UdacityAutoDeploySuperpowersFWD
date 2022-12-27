@@ -339,7 +339,7 @@ jobs:
             export TYPEORM_MIGRATIONS=./migrations/*.ts
             cd .circleci/ansible
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       # - destroy-environment
       # - revert-migrations            
       # Here's where you will add some code to rollback on failure  

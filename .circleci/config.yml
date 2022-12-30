@@ -154,6 +154,7 @@ jobs:
             npm install
             npm audit fix --force --audit-level=critical
            # npm audit --audit-level=critical
+           # to fix an issue of development branch
       # - notify_on_failure
 
   scan-backend:

@@ -434,7 +434,6 @@ jobs:
             fi
       # - destroy-environment
       # - revert-migrations
-      #comment
             
 #  notify_on_success:
 #   docker:

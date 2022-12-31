@@ -80,7 +80,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-deps]
+          keys: [frontend-dep]
       - run:
           name: Build front-end
           command: |
@@ -89,7 +89,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [frontend/node_modules]
-          key: frontend-deps
+          key: frontend-dep
       # - notify_on_failure    
 
   build-backend:
@@ -98,7 +98,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-dep]
       - run:
           name: Back-end build
           command: |
@@ -107,7 +107,7 @@ jobs:
             npm run build
       - save_cache:
           paths: [backend/node_modules]
-          key: backend-deps
+          key: backend-dep
       # - notify_on_failure          
 
   test-frontend:
@@ -116,7 +116,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-deps]
+          keys: [frontend-dep]
       - run:
           name: Front-end unit test
           command: |
@@ -131,7 +131,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-dep]
       - run:
           name: Back-end unit test
           command: |
@@ -146,7 +146,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [frontend-deps]
+          keys: [frontend-dep]
       - run:
           name: Front-end scan
           command: |
@@ -163,7 +163,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-dep]
       - run:
           name: Back-end scan
           command: |
@@ -318,7 +318,7 @@ jobs:
       - attach_workspace:
           at: ~/
       - restore_cache:
-          keys: [backend-deps]
+          keys: [backend-dep]
       - run:
           name: Install dependencies
           command: |

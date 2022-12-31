@@ -231,7 +231,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml
-      - destroy-environment              
+      #- destroy-environment              
 
   #     # Here's where you will add some code to rollback on failure      
 
@@ -259,8 +259,8 @@ jobs:
             then
               curl https://kvdb.io/${KVDB_BUCKET}/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
-      - destroy-environment
-      - revert-migrations
+      #- destroy-environment
+      #- revert-migrations
 #            cd backend
             # if grep -q "has been executed successfully." migration_output.txt
             # then
@@ -302,7 +302,7 @@ jobs:
               cd frontend
               npm run build
               aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
-        - destroy-environment
+        #- destroy-environment
       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
@@ -341,8 +341,8 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - destroy-environment
-      - revert-migrations            
+      #- destroy-environment
+      #- revert-migrations            
       # Here's where you will add some code to rollback on failure  
 
   smoke-test:
@@ -378,8 +378,8 @@ jobs:
             else
               exit 1
             fi            
-      - destroy-environment
-      - revert-migrations                
+      #- destroy-environment
+      #- revert-migrations                
       # Here's where you will add some code to rollback on failure  
 
   cloudfront-update:
@@ -462,17 +462,17 @@ workflows:
           filters:
             branches:
               only: [master]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
-      # - run-migrations:
-      #     requires: [configure-infrastructure]
-      # - deploy-frontend:
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
-      # - cloudfront-update:
-      #     requires: [smoke-test]
-      # - cleanup:
-      #     requires: [cloudfront-update]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
+      - cloudfront-update:
+          requires: [smoke-test]
+      - cleanup:
+          requires: [cloudfront-update]

@@ -1,5 +1,5 @@
 version: 2.1
-
+#2/1/2022
 commands:
     install_awscli:
       description: Install AWS CLI v2
@@ -260,6 +260,7 @@ jobs:
               curl https://kvdb.io/${KVDB_BUCKET}/migrations_${CIRCLE_WORKFLOW_ID:0:7} -d '1'
             fi
       #- destroy-environment
+      
       #- revert-migrations
 #            cd backend
             # if grep -q "has been executed successfully." migration_output.txt
